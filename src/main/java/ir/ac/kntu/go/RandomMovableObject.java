@@ -7,9 +7,9 @@ import ir.ac.kntu.factory.GameObjectFactory;
 import javafx.scene.Scene;
 
 public class RandomMovableObject extends MovableObject {
-	protected Random	random	= new Random();
-	private int			base	= 31;
-	private int			modulo	= 60;
+	private Random	random	= new Random();
+	private int	base	= 31;
+	private int	modulo	= 60;
 
 	public RandomMovableObject(double x, double y, double width, double height) {
 		super(x, y, width, height);
@@ -18,15 +18,21 @@ public class RandomMovableObject extends MovableObject {
 
 	@Override
 	public void update(Scene scene, long time) {
-		if (extracted(position.getY()) && extracted(position.getX())) {
+		if (extracted(getPosition().getY()) && extracted(getPosition().getX())) {
 			changeDirection();
 		}
 		super.update(scene, time);
 	}
 
+	@Override
+	public int getLayer() {
+		return 0;
+	}
+
 	private void changeDirection() {
 		Direction tmp;
-		direction = (tmp = randomDirection()) == direction ? randomDirection() : tmp;
+		Direction direction = (tmp = randomDirection()) == getDirection() ? randomDirection() : tmp;
+		setDirection(direction);
 	}
 
 	private Direction randomDirection() {

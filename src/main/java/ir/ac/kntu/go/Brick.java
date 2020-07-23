@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Brick extends GameObject {
+    private int layer;
 
     private boolean destroyed;
     private double x;
@@ -20,13 +21,17 @@ public class Brick extends GameObject {
     private Image grass = new Image("C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\assets\\map\\normal.png");
 
     public Brick(double x, double y, double width, double height) {
-        this.x=x;this.y=y;this.width=width;this.height=height;
+        this.x=x;
+        this.y=y;
+        this.width=width;
+        this.height=height;
         ImageView imageView = new ImageView(getImage(brick));
         imageView.setFitHeight(height);
         imageView.setFitWidth(width);
         imageView.setX(x);
         imageView.setY(y);
-        node = imageView;
+        setNode(imageView);
+        layer = 1;
     }
 
     @Override
@@ -37,13 +42,12 @@ public class Brick extends GameObject {
             imageView.setFitWidth(width);
             imageView.setX(x);
             imageView.setY(y);
-            node = imageView;
+            setNode(imageView);
         }
     }
 
     @Override
     public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
-
     }
 
     private Image getImage(Image url) {
@@ -60,5 +64,9 @@ public class Brick extends GameObject {
     public void destroy() {
         destroyed = true;
     }
-
+	
+    @Override
+    public int getLayer() {
+		return layer;
+	}
 }

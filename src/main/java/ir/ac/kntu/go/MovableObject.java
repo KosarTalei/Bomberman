@@ -11,10 +11,10 @@ import java.io.FileNotFoundException;
 
 public abstract class MovableObject extends GameObject {
 
-	protected Position	last;
-	protected Position	position;
-	protected Direction	direction	= Direction.N;
-	protected int speed= 1;
+	private Position	last;
+	private Position	position;
+	private Direction	direction	= Direction.N;
+	private int speed= 1;
 	private double width;
 	private double height;
 
@@ -32,15 +32,15 @@ public abstract class MovableObject extends GameObject {
 		imageView.setFitWidth(width);
 		imageView.setX(x);
 		imageView.setY(y);
-		node = imageView;
+		setNode(imageView);
 		position = new Position((int) x, (int) y);
-		this.height = height;this.width=width;
-
+		this.height = height;
+		this.width=width;
 	}
 
 	@Override
 	public void update(Scene scene, long time) {
-		if (isDead) {
+		if (isDead()) {
 			return;
 		}
 		this.last = this.position;
@@ -80,29 +80,28 @@ public abstract class MovableObject extends GameObject {
 	protected Position move(Position position, Direction direction) {
 		Position newPosition;
 		switch (direction) {
-		case N:
-			newPosition = position.north(speed);
-			break;
-		case E:
-			newPosition = position.east(speed);
-			break;
-		case S:
-			newPosition = position.south(speed);
-			break;
-		case W:
-		default:
-			newPosition = position.west(speed);
-			break;
+			case N:
+				newPosition = position.north(speed);
+				break;
+			case E:
+				newPosition = position.east(speed);
+				break;
+			case S:
+				newPosition = position.south(speed);
+				break;
+			case W:
+			default:
+				newPosition = position.west(speed);
+				break;
 		}
 
 		moveToPosition(newPosition);
-
 		return newPosition;
 	}
 
 	protected void moveToPosition(Position newPosition) {
-		this.node.setTranslateX(newPosition.getX());
-		this.node.setTranslateY(newPosition.getY());
+		this.getNode().setTranslateX(newPosition.getX());
+		this.getNode().setTranslateY(newPosition.getY());
 	}
 
 	public double getHeight() {
@@ -111,5 +110,28 @@ public abstract class MovableObject extends GameObject {
 
 	public double getWidth() {
 		return width;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+	public boolean isPlayerCollisionFriendly() {
+		return false;
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
 	}
 }

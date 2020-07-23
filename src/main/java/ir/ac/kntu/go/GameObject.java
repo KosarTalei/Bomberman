@@ -11,11 +11,27 @@ import javafx.scene.image.ImageView;
 
 public abstract class GameObject {
 
-	protected List<Animation>	animations	= new ArrayList<>();
-	public ImageView node;
-	public double vX= 0;
-	public double vY= 0;
-	protected boolean isDead= false;
+	private List<Animation>	animations	= new ArrayList<>();
+	private ImageView node;
+	private double vX= 0;
+	private double vY= 0;
+	private boolean isDead= false;
+
+	public ImageView getNode() {
+		return node;
+	}
+
+	public void setNode(ImageView node) {
+		this.node = node;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean dead) {
+		isDead = dead;
+	}
 
 	public abstract void update(Scene scene, long time);
 
@@ -28,5 +44,14 @@ public abstract class GameObject {
 	}
 
 	public abstract <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1);
+
+
+	/**
+	 * 	Player is rendered at layer 0
+	 * 	Anything to be rendered below the player will get layer < 0 i.e Negative
+	 * 	Anything to be rendered above the player will get layer > 0 i.e Positive
+	 * */
+
+	public abstract int getLayer();
 
 }

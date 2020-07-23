@@ -25,64 +25,48 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Menu {
-
     private Stage stage;
     public Menu(Stage stage){
         this.stage = stage;
     }
-
     public  Parent createContent() {
-
         Pane root = new Pane();
-
         root.setPrefSize(900, 500);
-
         try(InputStream is = Files.newInputStream(Paths.get("C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\Background.jpg"))){
             ImageView img = new ImageView(new Image(is));
             img.setFitWidth(900);
             img.setFitHeight(500);
             root.getChildren().add(img);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             System.out.println("Couldn't load image");
         }
-
         Title title = new Title ("B O M B E R M A N");
         title.setTranslateX(50);
         title.setTranslateY(200);
-
         MenuItem m1 = new MenuItem("START THE GAME");
         //MenuItem m2 = new MenuItem("2 PLAYER GAME");
         //MenuItem m3 = new MenuItem("3 PLAYER GAME");
         //MenuItem m4 = new MenuItem("4 PLAYER GAME");
 
         MenuBox vbox = new MenuBox(m1);//,m2,m3,m4
-
         vbox.setTranslateX(100);
         vbox.setTranslateY(300);
-
         root.getChildren().addAll(title,vbox);
-
         return root;
-
     }
 
     private class MenuItem extends StackPane {
-
         public MenuItem(String name) {
             LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true,
                     CycleMethod.NO_CYCLE, new Stop(0, Color.DARKBLUE),
                     new Stop(0.1, Color.BLACK),
                     new Stop(0.9, Color.BLACK),
                     new Stop(1, Color.DARKBLUE));
-
             Rectangle bg = new Rectangle(200,40);
             bg.setOpacity(0.4);
-
             Text text = new Text(name);
             text.setFill(Color.DARKGREY);
             text.setFont(Font.font("Times New Man", FontWeight.SEMI_BOLD,20));
-
             setAlignment(Pos.CENTER);
             getChildren().addAll(bg, text);
             setOnMouseEntered(event -> {
@@ -90,7 +74,6 @@ public class Menu {
                 text.setFill(Color.WHITE);
 
             });
-
             setOnMouseExited(event -> {
                 bg.setFill(Color.BLACK);
                 text.setFill(Color.DARKGREY);
@@ -102,17 +85,10 @@ public class Menu {
                 atom.initialize(stage, "Bomberman", 900, 600, new File(
                         "C:\\Users\\Mohammad\\Desktop\\hw5-fariborz-bomberman\\map\\map1.m"));
                 atom.beginGameLoop();
-
-                //stage.setScene(gameEngine.getGameSurface());
                 stage.show();
-                //});
-                //thread.start();
             });
-
             setOnMouseReleased(event -> bg.setFill(gradient));
-
         }
-
     }
 
     private static class Title extends StackPane {
@@ -121,11 +97,9 @@ public class Menu {
             bg.setStroke(Color.WHITE);
             bg.setStrokeWidth(2);
             bg.setFill(null);
-
             Text text = new Text(name);
             text.setFill(Color.WHITE);
             text.setFont(Font.font("Times New Man", FontWeight.SEMI_BOLD, 50));
-
             setAlignment(Pos.CENTER);
             getChildren().addAll(bg,text);
         }
@@ -139,13 +113,11 @@ public class Menu {
                 getChildren().addAll(item, createSeparator());
             }
         }
-
         private Line createSeparator() {
             Line sep = new Line();
             sep.setEndX(210);
             sep.setStroke(Color.DARKGREY);
             return sep;
         }
-
     }
 }

@@ -22,7 +22,7 @@ public class Flame extends MovableObject {
 		this.size = size;
 		imageView.setX(x);
 		imageView.setY(y);
-		node = imageView;
+		setNode(imageView);
 
 	}
 
@@ -40,5 +40,10 @@ public class Flame extends MovableObject {
 
 	@Override
 	public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
+	}
+
+	@Override
+	public int getLayer() {
+		return 0;
 	}
 }

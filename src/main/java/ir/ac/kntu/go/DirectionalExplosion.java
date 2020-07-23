@@ -12,9 +12,8 @@ import java.util.ArrayList;
 
 public class DirectionalExplosion extends GameObject{
     private GameObjectManager gameObjectManager;
-    protected int _direction;
-    private int _radius;
-    protected int xOrigin, yOrigin;
+    private int direction;
+    private int xOrigin, yOrigin;
     private ArrayList<Bomb> bombs = new ArrayList();
 
     public DirectionalExplosion(int x, int y, int direction, int radius) {
@@ -41,7 +40,7 @@ public class DirectionalExplosion extends GameObject{
         imageView.setFitWidth(bomb.getWidth());
         imageView.setX(bomb.getX());
         imageView.setY(bomb.getY());
-        node = imageView;
+        setNode(imageView);
 
     }
     private Image getImage() {
@@ -63,6 +62,10 @@ public class DirectionalExplosion extends GameObject{
 
     @Override
     public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
+    }
 
+    @Override
+    public int getLayer() {
+        return 0;
     }
 }

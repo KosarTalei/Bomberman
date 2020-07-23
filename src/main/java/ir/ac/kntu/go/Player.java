@@ -1,110 +1,167 @@
 package ir.ac.kntu.go;
-
-import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.LEFT;
-import static javafx.scene.input.KeyCode.RIGHT;
-import static javafx.scene.input.KeyCode.UP;
-
-import java.util.Arrays;
-import java.util.List;
-
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
-import ir.ac.kntu.keyboard.KeyListener;
-import javafx.animation.FadeTransition;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.util.Duration;
+import ir.ac.kntu.animations.PlayerAnimations;
+import ir.ac.kntu.boundedbox.RectBoundedBox;
+import javafx.scene.image.Image;
 
-public class Player extends MovableObject implements KeyListener {
+public class Player  extends MovableObject{
+    private Image currentImage;
+    private PlayerAnimations playerAnimations;
+    private int health;
+    private boolean isAlive;
+    private Direction currentDirection;
+    private int positionX = 0;
+    private int positionY = 0;
+    private int layer;
+    private String name;
+    private int scale = 1;
+    private double reduceBoundarySizePercent=0.45;
+    private RectBoundedBox playerBoundary;
 
-	private KeyCode	currentlyPressed;
-	private List<Bomb> bombs;
-	private int timeBetweenPutBombs = 0;
-	private GameObjectManager gameObjectManager;
-	private GameEngine gameEngine;
+    public Player() {
+        super(64, 64, 30, 30);
+        init(64, 64);
+    }
+    public Player(int posX, int posY) {
+        super(posX, posY, 30, 30);
+        init(posX, posY);
+        health = 100;
+        isAlive = true;
+        layer=0;
+    }
 
-	private boolean alive=true;
+    private void init(int x, int y) {
+        name = "Player";
+        setScale(2);
+        positionX = x;
+        positionY = y;
+        playerBoundary = new RectBoundedBox(positionX+(int)(30*getReduceBoundarySizePercent()),
+                positionY+(int)(30*getReduceBoundarySizePercent()),
+                (30* getScale())-2*+(int)(30*getReduceBoundarySizePercent()),
+                (30* getScale())-2*+(int)(30*getReduceBoundarySizePercent())
+        );
+    }
+    public void move(Direction direction) {
+        move(1, direction);
+    }
+    public int getHealth() {
+        return health;
+    }
+    public boolean isAlive() {
+        return isAlive;
+    }
+    public String toString() {
+        return name;
+    }
+    public void move(int steps, Direction direction) {
 
-	public Player(double x, double y, double width, double height) {
-		super(x, y, width, height);
-		this.speed = 0;
+        if (steps == 0) {
+            setCurrentImage(playerAnimations.getPlayerIdleSprite());
+            return;
+        } else {
+            switch (direction) {
+                case N:
+                    if(!checkCollisions(positionX, positionY - steps)) {
+                        positionY -= steps;
+                        setCurrentImage(playerAnimations.getMoveUpSprite());
+                        currentDirection = Direction.N;
+                    }
+                    break;
+                case S:
+                    if(!checkCollisions(positionX, positionY + steps)) {
+                        positionY += steps;
+                        setCurrentImage(playerAnimations.getMoveDownSprite());
+                        currentDirection = Direction.S;
+                    }
+                    break;
+                case W:
+                    if(!checkCollisions(positionX - steps, positionY)) {
+                        positionX -= steps;
+                        setCurrentImage(playerAnimations.getMoveLeftSprite());
+                        currentDirection = Direction.W;
+                    }
+                    break;
+                case E:
+                    if(!checkCollisions(positionX + steps, positionY)) {
+                        positionX += steps;
+                        setCurrentImage(playerAnimations.getMoveRightSprite());
+                        currentDirection = Direction.E;
+                    }
+                    break;
+                default:
+                    setCurrentImage(playerAnimations.getPlayerIdleSprite());
+            }
+        }
+    }
+
+    private boolean checkCollisions(int x, int y) {
+        playerBoundary.setPosition(x, y,getReduceBoundarySizePercent());
+
+        for (GameObject e : GameEngine.getEntities()) {
+            if (e != this && isColliding(e) && !(e instanceof MovableObject)) {
+                playerBoundary.setPosition(positionX, positionY,getReduceBoundarySizePercent());
+                /*
+                System.out.println("Player x="+getPositionX()+" y="
+                        +getPositionY()+" colliding with x="+e.getPositionX()
+                        +" y="+e.getPositionY());
+                */
+                return true;
+            }
+        }
+        playerBoundary.setPosition(positionX, positionY,getReduceBoundarySizePercent());
+        return false;
+    }
+    private void setCurrentImage(Image s) {
+        if (s != null) {
+            currentImage = s;
+        } else {
+            System.out.println("Sprite missing!");
+        }
+    }
+    public void reduceHealth(int damage) {
+        if (health - damage <= 0) {
+            die();
+        } else {
+            health -= damage;
+        }
+    }
+    public void die() {
+        setCurrentImage(playerAnimations.getPlayerDying());
+    }
+    public void removeFromScene() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods.
+    }
+    public int getPositionX() {
+        return positionX;
+    }
+    public int getPositionY() {
+        return positionY;
+    }
+    @Override
+    public int getLayer() {
+		return layer;
 	}
-
-	@Override
-	public List<KeyCode> interestedIn() {
-		return Arrays.asList(LEFT, RIGHT, UP, DOWN);
-	}
-
-	@Override
-	public void notify(KeyEvent keyEvent) {
-		EventType<? extends Event> eventType = keyEvent.getEventType();
-		if (KeyEvent.KEY_RELEASED.equals(eventType)) {
-			if (keyEvent.getCode().equals(currentlyPressed)) {
-				this.speed = 0;
-			}
-		} else if (KeyEvent.KEY_PRESSED.equals(eventType)) {
-			currentlyPressed = keyEvent.getCode();
-			this.direction = getDirection(keyEvent);
-			this.speed = 1;
-
-		}
-
-	}
-
-	private Direction getDirection(KeyEvent keyEvent) {
-		switch (keyEvent.getCode()) {
-		case LEFT:
-			return Direction.E;
-		case UP:
-			return Direction.N;
-		case DOWN:
-			return Direction.S;
-		case RIGHT:
-		default:
-			return Direction.W;
-		}
-	}
-
-	@Override
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, RandomMovableObject go1) {
-		if (!isDead) {
-			speed = 0;
-			isDead = true;
-			FadeTransition fadeTransition = new FadeTransition();
-			fadeTransition.setNode(node);
-			fadeTransition.setDuration(Duration.millis(3000));
-			fadeTransition.setFromValue(node.getOpacity());
-			fadeTransition.setToValue(0);
-			fadeTransition.setOnFinished((new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent arg0) {
-					atomSmasher.removeObjects(Player.this);
-				}
-			}));
-			fadeTransition.play();
-
-		}
-	}
-
-	protected void placeBomb(int x, int y) {
-		Bomb b = new Bomb(x, y,getWidth(),getHeight());
-		gameObjectManager.addActor(b);
-	}
-
-	public void kill() {
-		if(alive == false){
-			return;
-		}
-		alive = false;
-
-		TextField msg = new TextField("PLAYER WAS DEAD!");
-		gameEngine.addMessage(msg);
-	}
-
+    public int getScale() {
+        return scale;
+    }
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
+    public double getReduceBoundarySizePercent() {
+        return reduceBoundarySizePercent;
+    }
+    public void setReduceBoundarySizePercent(double reduceBoundarySizePercent) {
+        this.reduceBoundarySizePercent = reduceBoundarySizePercent;
+    }
+    public void setImg(String s){
+        Image image = new Image(getClass().getResourceAsStream("player_down_standing.png"));
+        if (image != null) {
+            currentImage=image;
+        }else {
+            System.out.println("cannot load image!");
+        }
+    }
+    public boolean isPlayerCollisionFriendly() {
+        return true;
+    }
 }

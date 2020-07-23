@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 
 public class Bomb extends GameObject {
 
+    private int layer;
 	private static final long	BOMB_TIME	= 5000000000L;
 	private long	startTime	= 0;
 	private boolean	firstUpdate	= false;
@@ -34,7 +35,9 @@ public class Bomb extends GameObject {
 		imageView.setFitWidth(width);
 		imageView.setX(x);
 		imageView.setY(y);
-		node = imageView;
+		setNode(imageView);
+
+		layer=-2;
 
 		ticking = new ScaleTransition();
 		ticking.setFromX(1);
@@ -44,7 +47,7 @@ public class Bomb extends GameObject {
 		ticking.setToY(0.8);
 		ticking.setAutoReverse(true);
 		ticking.setCycleCount(1000);
-		ticking.setNode(node);
+		ticking.setNode(getNode());
 	}
 
 	private Image getImage() {
@@ -76,6 +79,11 @@ public class Bomb extends GameObject {
 	@Override
 	public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
 
+	}
+
+	@Override
+	public int getLayer() {
+		return layer;
 	}
 
 	public static long getBombTime() {

@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Grass extends GameObject {
+    private int layer;
     public Grass(double x, double y, double width, double height) {
         Image image = getImage();
         ImageView imageView = new ImageView(image);
@@ -17,7 +18,7 @@ public class Grass extends GameObject {
         imageView.setFitWidth(width);
         imageView.setX(x);
         imageView.setY(y);
-        node = imageView;
+        setNode(imageView);
     }
 
     private Image getImage() {
@@ -40,5 +41,9 @@ public class Grass extends GameObject {
     public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
 
     }
+    @Override
+    public int getLayer() { 
+	    return layer;
+	}
 
 }
