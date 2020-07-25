@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
 import ir.ac.kntu.keyboard.KeyListener;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -29,7 +28,6 @@ public class PlayerEnemy extends MovableObject implements KeyListener {
 	private GameObjectManager gameObjectManager;
 	private GameEngine gameEngine;
 	private int layer;
-
 	private boolean alive=true;
 
 	public PlayerEnemy(double x, double y, double width, double height) {
@@ -54,7 +52,6 @@ public class PlayerEnemy extends MovableObject implements KeyListener {
 			currentlyPressed = keyEvent.getCode();
 			setDirection(getDirection(keyEvent));
 			this.setSpeed(1);
-
 		}
 
 	}
@@ -74,7 +71,7 @@ public class PlayerEnemy extends MovableObject implements KeyListener {
 	}
 
 	@Override
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, RandomMovableObject go1) {
+	protected <T> void collide(GameEngine<T, ?> atomSmasher, RandomMovableObject go1) {
 		if (!isDead()) {
 			this.setSpeed(0);
 			setDead(true);
@@ -104,7 +101,6 @@ public class PlayerEnemy extends MovableObject implements KeyListener {
 			return;
 		}
 		alive = false;
-
 		TextField msg = new TextField("PLAYER WAS DEAD!");
 		gameEngine.addMessage(msg);
 	}

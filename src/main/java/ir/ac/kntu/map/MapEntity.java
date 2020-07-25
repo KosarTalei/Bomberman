@@ -1,7 +1,8 @@
 package ir.ac.kntu.map;
 
 public enum MapEntity {
-	W("Wall"), E("Enemy"), P("Player"), B("Bomb"),G("Grass");
+	W("Wall"), E("Enemy"), B("Bomb"),G("Grass"),P("Player"),
+	b("Brick");
 
 	private String	name;
 

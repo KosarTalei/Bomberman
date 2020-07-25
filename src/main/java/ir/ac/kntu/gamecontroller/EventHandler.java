@@ -15,8 +15,8 @@ public class EventHandler {
     private static ArrayList<KeyCode> inputList = new ArrayList<KeyCode>();
 
     public static void attachEventHandlers(Scene s){
-        keyReleaseHanlder krh = new keyReleaseHanlder();
-        keyPressedHandler kph = new keyPressedHandler();
+        KeyReleaseHandler krh = new KeyReleaseHandler();
+        KeyPressedHandler kph = new KeyPressedHandler();
         s.setOnKeyReleased(krh);
         s.setOnKeyPressed(kph);
     }
@@ -42,14 +42,13 @@ public class EventHandler {
     }
 }
 
-class keyReleaseHanlder implements javafx.event.EventHandler<KeyEvent> {
-    public keyReleaseHanlder() {
+class KeyReleaseHandler implements javafx.event.EventHandler<KeyEvent> {
+    public KeyReleaseHandler() {
     }
 
     @Override
     public void handle(KeyEvent evt) {
         //System.out.println("The key released is : "+evt.getText()+" with keycode "+evt.getCode().getName());
-
         KeyCode code = evt.getCode();
 
         if (EventHandler.getInputList().contains(code)) {
@@ -58,8 +57,7 @@ class keyReleaseHanlder implements javafx.event.EventHandler<KeyEvent> {
     }
 }
 
-
-class keyPressedHandler implements javafx.event.EventHandler<KeyEvent> {
+class KeyPressedHandler implements javafx.event.EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent evt) {
         //System.out.println("The key pressed is : "+evt.getText()+" with keycode "+evt.getCode().getName());

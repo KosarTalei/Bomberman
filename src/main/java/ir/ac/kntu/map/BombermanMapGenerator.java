@@ -3,16 +3,17 @@ package ir.ac.kntu.map;
 import ir.ac.kntu.GameEngine;
 import ir.ac.kntu.factory.BombermanObjectFactory;
 import ir.ac.kntu.go.GameObject;
+import ir.ac.kntu.go.Player;
 import ir.ac.kntu.go.Wall;
 import java.util.Vector;
 
-public class BombermanMapGeneratorImpl extends MapGeneratorImpl<MapEntity> {
+public class BombermanMapGenerator extends MapGenerator<MapEntity> {
 
 	private BombermanObjectFactory objectFactory;
 	private GameEngine gameEngine;
 	private Vector<Wall> walls = new Vector<Wall>();
 
-	public BombermanMapGeneratorImpl(BombermanObjectFactory objectFactory) {
+	public BombermanMapGenerator(BombermanObjectFactory objectFactory) {
 		super();
 		this.objectFactory = objectFactory;
 	}
@@ -27,9 +28,13 @@ public class BombermanMapGeneratorImpl extends MapGeneratorImpl<MapEntity> {
 			case E:
 				return objectFactory.getMovableObject(x, y);
 			case P:
-				return objectFactory.getPlayer(x, y);
+				Player p = objectFactory.getPlayer(x,y);
+				GameEngine.setPlayer(p);
+				return p;
 			case B:
 				return objectFactory.getBomb(x, y);
+			case b:
+				return objectFactory.getBrick(x,y);
 			case G:
 				return objectFactory.getGrass(x, y);
 			default:
@@ -37,6 +42,7 @@ public class BombermanMapGeneratorImpl extends MapGeneratorImpl<MapEntity> {
 		}
 
 	}
+
 	public void addWall(){
 		for(Wall wall : walls) {
 			gameEngine.addEntityToGame(wall);

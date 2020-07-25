@@ -19,7 +19,8 @@ public class InputManager {
 
         List keyboardInputs = EventHandler.getInputList();
         Player player = GameEngine.getPlayer();
-        //System.err.println(""+keyboardInputs);
+        System.out.println("+"+player.isAlive());
+        System.err.println(""+keyboardInputs);
         if(keyboardInputs.contains(KeyCode.UP) || keyboardInputs.contains(KeyCode.W)){
             player.move(5, Direction.N);
         }

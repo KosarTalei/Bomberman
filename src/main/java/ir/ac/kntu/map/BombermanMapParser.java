@@ -1,6 +1,6 @@
 package ir.ac.kntu.map;
 
-public class BombermanMapParserImpl extends MapParserImpl<MapEntity> {
+public class BombermanMapParser extends MapParser<MapEntity> {
 
 	@Override
 	protected MapEntity parseEntity(char charAt) {

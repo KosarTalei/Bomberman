@@ -1,7 +1,6 @@
 package ir.ac.kntu.go;
 
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,14 +18,8 @@ public abstract class MovableObject extends GameObject {
 	private double height;
 
 	public MovableObject(double x, double y, double width, double height) {
-		Image image = null;
-		try {
-			image = new Image(new FileInputStream(
-					"C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\assets\\player\\player_down_moving.png"));
-		} catch (FileNotFoundException e) {
-			System.out.println("cannot load player img!");
-			e.printStackTrace();
-		}
+		super(x,y);
+		Image image = getImage();
 		ImageView imageView = new ImageView(image);
 		imageView.setFitHeight(height);
 		imageView.setFitWidth(width);
@@ -48,7 +41,7 @@ public abstract class MovableObject extends GameObject {
 	}
 
 	@Override
-	public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
+	public <T> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
 		if (go1 instanceof Wall) {
 			collide(atomSmasher, (Wall) go1);
 		} else if (go1 instanceof RandomMovableObject) {
@@ -58,7 +51,7 @@ public abstract class MovableObject extends GameObject {
 		}
 	}
 
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, Wall go1) {
+	protected <T> void collide(GameEngine<T, ?> atomSmasher, Wall go1) {
 		if (last != null) {
 			this.position = last;
 		}
@@ -66,7 +59,7 @@ public abstract class MovableObject extends GameObject {
 		moveToPosition(position);
 	}
 
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, Bomb go1) {
+	protected <T> void collide(GameEngine<T, ?> atomSmasher, Bomb go1) {
 		if (last != null) {
 			this.position = last;
 		}
@@ -74,7 +67,7 @@ public abstract class MovableObject extends GameObject {
 		moveToPosition(position);
 	}
 
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, RandomMovableObject go1) {
+	protected <T> void collide(GameEngine<T, ?> atomSmasher, RandomMovableObject go1) {
 	}
 
 	protected Position move(Position position, Direction direction) {
@@ -115,9 +108,6 @@ public abstract class MovableObject extends GameObject {
 	public Position getPosition() {
 		return position;
 	}
-	public boolean isPlayerCollisionFriendly() {
-		return false;
-	}
 
 	public Direction getDirection() {
 		return direction;
@@ -133,5 +123,17 @@ public abstract class MovableObject extends GameObject {
 
 	public void setSpeed(int speed) {
 		this.speed = speed;
+	}
+
+	public Image getImage() {
+		Image image = null;
+		try {
+			image = new Image(new FileInputStream(
+					"C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\assets\\player\\player_down_moving.png"));
+		} catch (FileNotFoundException e) {
+			System.out.println("cannot load player img!");
+			e.printStackTrace();
+		}
+		return image;
 	}
 }

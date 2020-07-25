@@ -22,8 +22,9 @@ public class Player  extends MovableObject{
         super(64, 64, 30, 30);
         init(64, 64);
     }
-    public Player(int posX, int posY) {
-        super(posX, posY, 30, 30);
+
+    public Player(int posX, int posY,int height,int width) {
+        super(posX, posY, height, width);
         init(posX, posY);
         health = 100;
         isAlive = true;
@@ -35,12 +36,18 @@ public class Player  extends MovableObject{
         setScale(2);
         positionX = x;
         positionY = y;
-        playerBoundary = new RectBoundedBox(positionX+(int)(30*getReduceBoundarySizePercent()),
-                positionY+(int)(30*getReduceBoundarySizePercent()),
+        playerAnimations = new PlayerAnimations();
+        playerBoundary = new RectBoundedBox(positionX,
+                positionY,
                 (30* getScale())-2*+(int)(30*getReduceBoundarySizePercent()),
                 (30* getScale())-2*+(int)(30*getReduceBoundarySizePercent())
         );
+        /*positionX+(int)(30*getReduceBoundarySizePercent()),
+                positionY+(int)(30*getReduceBoundarySizePercent()),
+                (30* getScale())-2*+(int)(30*getReduceBoundarySizePercent()),
+                (30* getScale())-2*+(int)(30*getReduceBoundarySizePercent())*/
     }
+
     public void move(Direction direction) {
         move(1, direction);
     }
@@ -53,58 +60,56 @@ public class Player  extends MovableObject{
     public String toString() {
         return name;
     }
-    public void move(int steps, Direction direction) {
 
+    public void move(int steps, Direction direction) {
         if (steps == 0) {
             setCurrentImage(playerAnimations.getPlayerIdleSprite());
             return;
         } else {
-            switch (direction) {
-                case N:
-                    if(!checkCollisions(positionX, positionY - steps)) {
-                        positionY -= steps;
-                        setCurrentImage(playerAnimations.getMoveUpSprite());
-                        currentDirection = Direction.N;
-                    }
-                    break;
-                case S:
-                    if(!checkCollisions(positionX, positionY + steps)) {
-                        positionY += steps;
-                        setCurrentImage(playerAnimations.getMoveDownSprite());
-                        currentDirection = Direction.S;
-                    }
-                    break;
-                case W:
-                    if(!checkCollisions(positionX - steps, positionY)) {
-                        positionX -= steps;
-                        setCurrentImage(playerAnimations.getMoveLeftSprite());
-                        currentDirection = Direction.W;
-                    }
-                    break;
-                case E:
-                    if(!checkCollisions(positionX + steps, positionY)) {
-                        positionX += steps;
-                        setCurrentImage(playerAnimations.getMoveRightSprite());
-                        currentDirection = Direction.E;
-                    }
-                    break;
-                default:
-                    setCurrentImage(playerAnimations.getPlayerIdleSprite());
-            }
+            switchDirection(steps, direction);
+        }
+    }
+
+    private void switchDirection(int steps, Direction direction) {
+        switch (direction) {
+            case N:
+                if(!checkCollisions(positionX, positionY - steps)) {
+                    positionY -= steps;
+                    setCurrentImage(playerAnimations.getMoveUpSprite());
+                    currentDirection = Direction.N;
+                }
+                break;
+            case S:
+                if(!checkCollisions(positionX, positionY + steps)) {
+                    positionY += steps;
+                    setCurrentImage(playerAnimations.getMoveDownSprite());
+                    currentDirection = Direction.S;
+                }
+                break;
+            case W:
+                if(!checkCollisions(positionX - steps, positionY)) {
+                    positionX -= steps;
+                    setCurrentImage(playerAnimations.getMoveLeftSprite());
+                    currentDirection = Direction.W;
+                }
+                break;
+            case E:
+                if(!checkCollisions(positionX + steps, positionY)) {
+                    positionX += steps;
+                    setCurrentImage(playerAnimations.getMoveRightSprite());
+                    currentDirection = Direction.E;
+                }
+                break;
+            default:
+                setCurrentImage(playerAnimations.getPlayerIdleSprite());
         }
     }
 
     private boolean checkCollisions(int x, int y) {
         playerBoundary.setPosition(x, y,getReduceBoundarySizePercent());
-
         for (GameObject e : GameEngine.getEntities()) {
             if (e != this && isColliding(e) && !(e instanceof MovableObject)) {
                 playerBoundary.setPosition(positionX, positionY,getReduceBoundarySizePercent());
-                /*
-                System.out.println("Player x="+getPositionX()+" y="
-                        +getPositionY()+" colliding with x="+e.getPositionX()
-                        +" y="+e.getPositionY());
-                */
                 return true;
             }
         }
@@ -150,17 +155,7 @@ public class Player  extends MovableObject{
     public double getReduceBoundarySizePercent() {
         return reduceBoundarySizePercent;
     }
-    public void setReduceBoundarySizePercent(double reduceBoundarySizePercent) {
-        this.reduceBoundarySizePercent = reduceBoundarySizePercent;
-    }
-    public void setImg(String s){
-        Image image = new Image(getClass().getResourceAsStream("player_down_standing.png"));
-        if (image != null) {
-            currentImage=image;
-        }else {
-            System.out.println("cannot load image!");
-        }
-    }
+
     public boolean isPlayerCollisionFriendly() {
         return true;
     }

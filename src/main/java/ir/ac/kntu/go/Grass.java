@@ -1,7 +1,6 @@
 package ir.ac.kntu.go;
 
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,8 +9,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Grass extends GameObject {
+
     private int layer;
     public Grass(double x, double y, double width, double height) {
+        super(x,y);
         Image image = getImage();
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(height);
@@ -19,9 +20,10 @@ public class Grass extends GameObject {
         imageView.setX(x);
         imageView.setY(y);
         setNode(imageView);
+        layer=0;
     }
 
-    private Image getImage() {
+    public Image getImage() {
         Image image = null;
         try {
             image = new Image(new FileInputStream(
@@ -38,7 +40,7 @@ public class Grass extends GameObject {
     }
 
     @Override
-    public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
+    public <T> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
 
     }
     @Override

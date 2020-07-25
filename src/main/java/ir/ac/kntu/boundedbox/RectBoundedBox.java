@@ -4,13 +4,13 @@ import javafx.geometry.Rectangle2D;
 
 public class RectBoundedBox {
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    private double x;
+    private double y;
+    private double width;
+    private double height;
     private Rectangle2D boundary;
 
-    public RectBoundedBox(int x, int y, int w, int h){
+    public RectBoundedBox(double x, double y, double w, double h){
         this.x=x;
         this.y=y;
         width=w;
@@ -31,8 +31,8 @@ public class RectBoundedBox {
     }
 
     public void setPosition(int x, int y, double reductionPercent) {
-    	this.x = x+(int)(30*reductionPercent);//player height and width
-    	this.y = y+(int)(30*reductionPercent);
+    	this.x = x;//player height and width//+(int)(30*reductionPercent);
+    	this.y = y;//+(int)(30*reductionPercent);
     	boundary = new Rectangle2D(this.x, this.y, width, height);
     }
 

@@ -1,24 +1,27 @@
 package ir.ac.kntu.go;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
-import javafx.animation.Animation;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public abstract class GameObject {
 
-	private List<Animation>	animations	= new ArrayList<>();
 	private ImageView node;
-	private double vX= 0;
-	private double vY= 0;
+	private double x= 0;
+	private double y= 0;
 	private boolean isDead= false;
+
+	public GameObject(double x ,double y){
+		this.x=x;
+		this.y=y;
+	}
 
 	public ImageView getNode() {
 		return node;
+	}
+	public Image getImage(){
+		return node.getImage();
 	}
 
 	public void setNode(ImageView node) {
@@ -43,15 +46,22 @@ public abstract class GameObject {
 		return node.getBoundsInParent().intersects(gameObject.node.getBoundsInParent());
 	}
 
-	public abstract <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1);
+	public abstract <T> void collide(GameEngine<T, ?> atomSmasher, GameObject go1);
 
 
 	/**
-	 * 	Player is rendered at layer 0
-	 * 	Anything to be rendered below the player will get layer < 0 i.e Negative
-	 * 	Anything to be rendered above the player will get layer > 0 i.e Positive
+	 * 	Player is at layer 0
+	 * 	Anything to be below the player will get layer < 0
+	 * 	Anything to be above the player will get layer > 0
 	 * */
 
 	public abstract int getLayer();
 
+	public double getY() {
+		return y;
+	}
+
+	public double getX() {
+		return x;
+	}
 }

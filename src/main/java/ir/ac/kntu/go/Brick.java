@@ -1,37 +1,41 @@
 package ir.ac.kntu.go;
-
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 public class Brick extends GameObject {
     private int layer;
-
     private boolean destroyed;
     private double x;
     private double y;
     private double width;
     private double height;
-    private Image brick = new Image( "C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\assets\\map\\wall.png");
-    private Image grass = new Image("C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\assets\\map\\normal.png");
+    private String brick = "C:\\Users\\Mohammad\\Desktop\\hw5-fariborz-bomberman\\" +
+            "resources\\assets\\map\\block_breaking.png";
+    private String grass = "C:\\Users\\Mohammad\\Desktop\\hw5-fariborz-bomberman\\" +
+            "resources\\assets\\map\\normal.png";
 
     public Brick(double x, double y, double width, double height) {
+        super(x,y);
         this.x=x;
         this.y=y;
         this.width=width;
         this.height=height;
+        ImageView imageView = getImageView(x, y, width, height);
+        setNode(imageView);
+        layer = 1;
+    }
+
+    private ImageView getImageView(double x, double y, double width, double height) {
         ImageView imageView = new ImageView(getImage(brick));
         imageView.setFitHeight(height);
         imageView.setFitWidth(width);
         imageView.setX(x);
         imageView.setY(y);
-        setNode(imageView);
-        layer = 1;
+        return imageView;
     }
 
     @Override
@@ -47,13 +51,13 @@ public class Brick extends GameObject {
     }
 
     @Override
-    public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
+    public <T> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
     }
 
-    private Image getImage(Image url) {
+    private Image getImage(String s) {
         Image image = null;
         try {
-            image = new Image(new FileInputStream(String.valueOf(url)));
+            image = new Image(new FileInputStream(s));
         } catch (FileNotFoundException e) {
             System.out.println("cannot load brick img!");
             e.printStackTrace();

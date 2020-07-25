@@ -3,10 +3,10 @@ package ir.ac.kntu.go;
 import java.util.Random;
 
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
 import javafx.scene.Scene;
 
 public class RandomMovableObject extends MovableObject {
+
 	private Random	random	= new Random();
 	private int	base	= 31;
 	private int	modulo	= 60;
@@ -44,14 +44,14 @@ public class RandomMovableObject extends MovableObject {
 	}
 
 	@Override
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, Wall go1) {
+	protected <T> void collide(GameEngine<T, ?> atomSmasher, Wall go1) {
 		super.collide(atomSmasher, go1);
 		changeDirection();
 
 	}
 
 	@Override
-	protected <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, Bomb go1) {
+	protected <T> void collide(GameEngine<T, ?> atomSmasher, Bomb go1) {
 		super.collide(atomSmasher, go1);
 		changeDirection();
 	}

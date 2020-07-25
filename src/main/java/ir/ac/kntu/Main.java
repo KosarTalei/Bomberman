@@ -1,5 +1,6 @@
 package ir.ac.kntu;
 
+import ir.ac.kntu.Menu.Menu;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

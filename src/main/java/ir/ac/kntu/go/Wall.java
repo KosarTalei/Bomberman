@@ -1,7 +1,6 @@
 package ir.ac.kntu.go;
 
 import ir.ac.kntu.GameEngine;
-import ir.ac.kntu.factory.GameObjectFactory;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,8 +10,10 @@ import java.io.FileNotFoundException;
 
 public class Wall extends GameObject {
 	private int layer;
+	private Image image;
 
 	public Wall(double x, double y, double width, double height) {
+		super(x,y);
 		Image image = getImage();
 		ImageView imageView = new ImageView(image);
 		imageView.setFitHeight(height);
@@ -24,10 +25,9 @@ public class Wall extends GameObject {
 		layer = 1;
 	}
 
-	private Image getImage() {
-		Image image = null;
+	public Image getImage() {
 		try {
-			image = new Image(new FileInputStream(
+			this.image = new Image(new FileInputStream(
 					"C:\\Users\\Mohammad\\Desktop\\bomberman1\\resources\\assets\\map\\wall.png"));
 		} catch (FileNotFoundException e) {
 			System.out.println("cannot load wall img!");
@@ -41,7 +41,7 @@ public class Wall extends GameObject {
 	}
 
 	@Override
-	public <T extends GameObjectFactory> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
+	public <T> void collide(GameEngine<T, ?> atomSmasher, GameObject go1) {
 
 	}
 
